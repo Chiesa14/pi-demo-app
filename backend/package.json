@@ -8,7 +8,8 @@
   },
   "scripts": {
     "build": "tsc",
-    "start": "ts-node-dev ./src/index.ts"
+    "start": "NODE_ENV=development ts-node-dev ./src/index.ts",
+    "start:prod": "NODE_ENV=production ts-node-dev ./build/index.js"
   },
   "dependencies": {
     "@types/connect-mongo": "^3.1.3",
