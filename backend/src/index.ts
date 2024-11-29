@@ -18,12 +18,14 @@ import "./types/session";
 
 const mongoUri = `mongodb+srv://${env.mongo_user}:${encodeURIComponent(
   env.mongo_password
-)}@${env.mongo_host}`;
+)}@${env.mongo_host}?ssl=true`;
 
 const mongoClientOptions = {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   authSource: "admin",
+  ssl: true,
+  sslValidate: true,
 };
 
 //
