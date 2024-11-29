@@ -97,6 +97,7 @@ app.get("/", async (_, res) => {
 
 app.listen(8000, async () => {
   try {
+    console.log("Connecting to MongoDB with URI:", mongoUri);
     const client = await MongoClient.connect(mongoUri, mongoClientOptions);
     const db = client.db(env.mongo_db_name);
     app.locals.orderCollection = db.collection("orders");
