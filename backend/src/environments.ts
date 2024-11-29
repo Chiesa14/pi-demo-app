@@ -22,7 +22,8 @@ interface Environment {
   mongo_db_name: string,
   mongo_user: string,
   mongo_password: string,
-  frontend_url: string,
+  frontend_url_one: string,
+  frontend_url_two: string,
 }
 
 const env: Environment = {
@@ -33,7 +34,8 @@ const env: Environment = {
   mongo_db_name: process.env.MONGODB_DATABASE_NAME || 'demo-app',
   mongo_user: process.env.MONGODB_USERNAME || '',
   mongo_password: process.env.MONGODB_PASSWORD || '',
-  frontend_url: process.env.FRONTEND_URL || 'http://localhost:3314',
+  frontend_url_one: process.env.FRONTEND_URL_ONE || 'http://localhost:3314',
+  frontend_url_two: process.env.FRONTEND_URL_TWO || 'http://localhost:3314',
 };
 
 export default env;

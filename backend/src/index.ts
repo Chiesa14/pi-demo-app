@@ -51,9 +51,20 @@ app.use(
 app.use(express.json());
 
 // Handle CORS:
+const allowedOrigins = [env.frontend_url_one, env.frontend_url_two];
+
 app.use(
   cors({
-    origin: env.frontend_url,
+    origin: (origin, callback) => {
+      // Allow requests with no origin (like mobile apps or curl)
+      if (!origin) return callback(null, true);
+
+      if (allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     credentials: true,
   })
 );
@@ -111,6 +122,6 @@ app.listen(8080, async () => {
 
   console.log("App platform demo app - Backend listening on port 8000!");
   console.log(
-    `CORS config: configured to respond to a frontend hosted on ${env.frontend_url}`
+    `CORS config: configured to respond to a frontend hosted on ${env.frontend_url_one} and on ${env.frontend_url_two}`
   );
 });
