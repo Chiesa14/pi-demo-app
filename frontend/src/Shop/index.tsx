@@ -81,12 +81,12 @@ export default function Shop() {
   };
 
   const signInUser = (authResult: AuthResult) => {
-    axiosClient.post("/v2/user/signin", { authResult });
+    axiosClient.post("/user/signin", { authResult });
     return setShowModal(false);
   };
 
   const signOutUser = () => {
-    return axiosClient.get("/v2/user/signout");
+    return axiosClient.get("/user/signout");
   };
 
   const onModalClose = () => {
@@ -114,22 +114,22 @@ export default function Shop() {
 
   const onIncompletePaymentFound = (payment: PaymentDTO) => {
     console.log("onIncompletePaymentFound", payment);
-    return axiosClient.post("/v2/payments/incomplete", { payment });
+    return axiosClient.post("/payments/incomplete", { payment });
   };
 
   const onReadyForServerApproval = (paymentId: string) => {
     console.log("onReadyForServerApproval", paymentId);
-    axiosClient.post("/v2/payments/approve", { paymentId }, config);
+    axiosClient.post("/payments/approve", { paymentId }, config);
   };
 
   const onReadyForServerCompletion = (paymentId: string, txid: string) => {
     console.log("onReadyForServerCompletion", paymentId, txid);
-    axiosClient.post("/v2/payments/complete", { paymentId, txid }, config);
+    axiosClient.post("/payments/complete", { paymentId, txid }, config);
   };
 
   const onCancel = (paymentId: string) => {
     console.log("onCancel", paymentId);
-    return axiosClient.post("/v2/payments/cancelled_payment", { paymentId });
+    return axiosClient.post("/payments/cancelled_payment", { paymentId });
   };
 
   const onError = (error: Error, payment?: PaymentDTO) => {
