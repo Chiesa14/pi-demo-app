@@ -49,7 +49,6 @@ interface WindowWithEnv extends Window {
 const _window: WindowWithEnv = window;
 const backendURL = _window.__ENV && _window.__ENV.backendURL;
 
-console.log(backendURL);
 
 
 const axiosClient = axios.create({
