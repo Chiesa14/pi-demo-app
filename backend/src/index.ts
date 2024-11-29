@@ -18,7 +18,7 @@ import "./types/session";
 
 const mongoUri = `mongodb+srv://${env.mongo_user}:${encodeURIComponent(
   env.mongo_password
-)}@${env.mongo_host}/`;
+)}@${env.mongo_host}`;
 
 const mongoClientOptions = {
   useNewUrlParser: true,
