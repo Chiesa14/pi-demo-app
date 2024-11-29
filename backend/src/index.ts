@@ -16,14 +16,14 @@ import mountUserEndpoints from "./handlers/users";
 // https://stackoverflow.com/questions/65108033/property-user-does-not-exist-on-type-session-partialsessiondata#comment125163548_65381085
 import "./types/session";
 
-const dbName = env.mongo_db_name;
-const mongoUri = `mongodb://${env.mongo_host}/${dbName}`;
+const mongoUri = `mongodb+srv://${env.mongo_user}:${encodeURIComponent(
+  env.mongo_password
+)}@${env.mongo_host}/`;
+
 const mongoClientOptions = {
-  authSource: env.mongo_db_name,
-  auth: {
-    username: env.mongo_user,
-    password: env.mongo_password,
-  },
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  authSource: "admin",
 };
 
 //
@@ -68,7 +68,7 @@ app.use(
     store: MongoStore.create({
       mongoUrl: mongoUri,
       mongoOptions: mongoClientOptions,
-      dbName: dbName,
+      dbName: env.mongo_db_name,
       collectionName: "user_sessions",
     }),
   })
@@ -98,7 +98,7 @@ app.get("/", async (_, res) => {
 app.listen(8000, async () => {
   try {
     const client = await MongoClient.connect(mongoUri, mongoClientOptions);
-    const db = client.db(dbName);
+    const db = client.db(env.mongo_db_name);
     app.locals.orderCollection = db.collection("orders");
     app.locals.userCollection = db.collection("users");
     console.log("Connected to MongoDB on: ", mongoUri);
