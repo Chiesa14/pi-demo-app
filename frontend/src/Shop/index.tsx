@@ -49,14 +49,13 @@ interface WindowWithEnv extends Window {
 const _window: WindowWithEnv = window;
 const backendURL = _window.__ENV && _window.__ENV.backendURL;
 
-
-
 const axiosClient = axios.create({
   baseURL: `${backendURL}`,
   timeout: 20000,
   withCredentials: true,
 });
 const config = {
+  withCredentials: true,
   headers: {
     "Content-Type": "application/json",
     "Access-Control-Allow-Origin": "*",
@@ -137,7 +136,7 @@ export default function Shop() {
   const onError = (error: Error, payment?: PaymentDTO) => {
     console.log("onError", error);
     if (payment) {
-      console.log("Payment error:",payment);
+      console.log("Payment error:", payment);
       // handle the error accordingly
     }
   };
