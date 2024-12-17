@@ -6,7 +6,7 @@ import "../types/session";
 export default function mountPaymentsEndpoints(router: Router) {
   router.post("/remove_incomplete", async (req, res) => {
     const app = req.app;
-    const paymentId = req.body.paymentId; // The identifier of the payment to be removed
+    const paymentId = req.body.payment.identifier;
     const orderCollection = app.locals.orderCollection;
 
     // Find and remove the incomplete payment
