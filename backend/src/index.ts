@@ -56,27 +56,23 @@ const allowedOrigins = [env.frontend_url_one, env.frontend_url_two];
 app.use(
   cors({
     origin: (origin, callback) => {
-      console.log("Incoming origin: ", origin);
-
-      // Allow requests with no origin (e.g., mobile apps or Postman)
-      if (!origin) return callback(null, true);
-
-      // Check if the origin is in the allowed list
-      if (allowedOrigins.includes(origin)) {
+      if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
-        console.error(`CORS blocked for origin: ${origin}`);
         callback(new Error("Not allowed by CORS"));
       }
     },
     credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // Allow all expected HTTP methods
-    allowedHeaders: ["Content-Type", "Authorization"], // Allow necessary headers
-    preflightContinue: false, // Don't pass preflight response to the next handler
-    optionsSuccessStatus: 204, // Response status for successful preflight requests
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: [
+      "Content-Type",
+      "Authorization",
+      "Access-Control-Allow-Origin",
+    ],
+    preflightContinue: false,
+    optionsSuccessStatus: 204,
   })
 );
-
 
 // Handle cookies 🍪
 app.use(cookieParser());
