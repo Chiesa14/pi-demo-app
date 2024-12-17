@@ -54,8 +54,6 @@ export default function mountPaymentsEndpoints(router: Router) {
 
   // approve the current payment
   router.post("/approve", async (req, res) => {
-    console.log(req.session);
-    req.session;
     if (!req.session) {
       return res.status(401).json({
         error: "unauthorized",
