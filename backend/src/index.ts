@@ -68,7 +68,6 @@ app.use(
     allowedHeaders: ["Content-Type", "Authorization"], // Add necessary headers
   })
 );
-app.options("*", cors());
 
 // Handle cookies 🍪
 app.use(cookieParser());
