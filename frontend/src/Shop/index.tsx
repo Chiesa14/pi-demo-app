@@ -137,7 +137,7 @@ export default function Shop() {
   const onError = (error: Error, payment?: PaymentDTO) => {
     console.log("onError", error);
     if (payment) {
-      console.log(payment);
+      console.log("Payment error:",payment);
       // handle the error accordingly
     }
   };
