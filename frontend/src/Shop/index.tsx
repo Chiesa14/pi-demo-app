@@ -115,7 +115,7 @@ export default function Shop() {
 
   const onIncompletePaymentFound = (payment: PaymentDTO) => {
     console.log("onIncompletePaymentFound", payment);
-    return axiosClient.post("/payments/incomplete", { payment });
+    return axiosClient.post("/payments/remove_incomplete", { payment });
   };
 
   const onReadyForServerApproval = (paymentId: string) => {
