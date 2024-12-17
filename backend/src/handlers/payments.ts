@@ -5,7 +5,7 @@ import "../types/session";
 
 export default function mountPaymentsEndpoints(router: Router) {
   // handle the incomplete payment
-  router.post('/incomplete', async (req, res) => {
+  router.post("/incomplete", async (req, res) => {
     const payment = req.body.payment;
     const paymentId = payment.identifier;
     const txid = payment.transaction && payment.transaction.txid;
@@ -23,7 +23,7 @@ export default function mountPaymentsEndpoints(router: Router) {
     const orderCollection = app.locals.orderCollection;
     const order = await orderCollection.findOne({ pi_payment_id: paymentId });
 
-    // order doesn't exist 
+    // order doesn't exist
     if (!order) {
       return res.status(400).json({ message: "Order not found" });
     }
@@ -38,23 +38,41 @@ export default function mountPaymentsEndpoints(router: Router) {
     }
 
     // mark the order as paid
-    await orderCollection.updateOne({ pi_payment_id: paymentId }, { $set: { txid, paid: true } });
+    await orderCollection.updateOne(
+      { pi_payment_id: paymentId },
+      { $set: { txid, paid: true } }
+    );
 
     // let Pi Servers know that the payment is completed
-    await platformAPIClient.post(`/v2/payments/${paymentId}/complete`, { txid });
-    return res.status(200).json({ message: `Handled the incomplete payment ${paymentId}` });
+    await platformAPIClient.post(`/v2/payments/${paymentId}/complete`, {
+      txid,
+    });
+    return res
+      .status(200)
+      .json({ message: `Handled the incomplete payment ${paymentId}` });
   });
 
   // approve the current payment
-  router.post('/approve', async (req, res) => {
+  router.post("/approve", async (req, res) => {
+    console.log(req.session);
+    req.session;
     if (!req.session.currentUser) {
-      return res.status(401).json({ error: 'unauthorized', message: "User needs to sign in first" });
+      return res
+        .status(401)
+        .json({
+          error: "unauthorized",
+          message: "User needs to sign in first",
+        });
     }
 
     const app = req.app;
 
     const paymentId = req.body.paymentId;
-    const currentPayment = await platformAPIClient.get(`/v2/payments/${paymentId}`);
+    console.log(paymentId);
+
+    const currentPayment = await platformAPIClient.get(
+      `/v2/payments/${paymentId}`
+    );
     const orderCollection = app.locals.orderCollection;
 
     /* 
@@ -69,16 +87,18 @@ export default function mountPaymentsEndpoints(router: Router) {
       txid: null,
       paid: false,
       cancelled: false,
-      created_at: new Date()
+      created_at: new Date(),
     });
 
     // let Pi Servers know that you're ready
     await platformAPIClient.post(`/v2/payments/${paymentId}/approve`);
-    return res.status(200).json({ message: `Approved the payment ${paymentId}` });
+    return res
+      .status(200)
+      .json({ message: `Approved the payment ${paymentId}` });
   });
 
   // complete the current payment
-  router.post('/complete', async (req, res) => {
+  router.post("/complete", async (req, res) => {
     const app = req.app;
 
     const paymentId = req.body.paymentId;
@@ -90,15 +110,22 @@ export default function mountPaymentsEndpoints(router: Router) {
       e.g. verify the transaction, deliver the item to the user, etc...
     */
 
-    await orderCollection.updateOne({ pi_payment_id: paymentId }, { $set: { txid: txid, paid: true } });
+    await orderCollection.updateOne(
+      { pi_payment_id: paymentId },
+      { $set: { txid: txid, paid: true } }
+    );
 
     // let Pi server know that the payment is completed
-    await platformAPIClient.post(`/v2/payments/${paymentId}/complete`, { txid });
-    return res.status(200).json({ message: `Completed the payment ${paymentId}` });
+    await platformAPIClient.post(`/v2/payments/${paymentId}/complete`, {
+      txid,
+    });
+    return res
+      .status(200)
+      .json({ message: `Completed the payment ${paymentId}` });
   });
 
   // handle the cancelled payment
-  router.post('/cancelled_payment', async (req, res) => {
+  router.post("/cancelled_payment", async (req, res) => {
     const app = req.app;
 
     const paymentId = req.body.paymentId;
@@ -109,7 +136,12 @@ export default function mountPaymentsEndpoints(router: Router) {
       e.g. mark the order record to cancelled, etc...
     */
 
-    await orderCollection.updateOne({ pi_payment_id: paymentId }, { $set: { cancelled: true } });
-    return res.status(200).json({ message: `Cancelled the payment ${paymentId}` });
-  })
+    await orderCollection.updateOne(
+      { pi_payment_id: paymentId },
+      { $set: { cancelled: true } }
+    );
+    return res
+      .status(200)
+      .json({ message: `Cancelled the payment ${paymentId}` });
+  });
 }
