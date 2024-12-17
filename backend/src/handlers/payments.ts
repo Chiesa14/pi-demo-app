@@ -4,25 +4,6 @@ import platformAPIClient from "../services/platformAPIClient";
 import "../types/session";
 
 export default function mountPaymentsEndpoints(router: Router) {
-  router.post("/remove_incomplete", async (req, res) => {
-    const app = req.app;
-    const paymentId = req.body.payment.identifier;
-    const orderCollection = app.locals.orderCollection;
-
-    // Find and remove the incomplete payment
-    const result = await orderCollection.deleteOne({
-      pi_payment_id: paymentId,
-    });
-
-    if (result.deletedCount === 0) {
-      return res.status(404).json({ message: "Incomplete payment not found" });
-    }
-
-    return res
-      .status(200)
-      .json({ message: `Removed incomplete payment ${paymentId}` });
-  });
-
   // handle the incomplete payment
   router.post("/incomplete", async (req, res) => {
     const payment = req.body.payment;
