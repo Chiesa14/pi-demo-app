@@ -56,6 +56,7 @@ const allowedOrigins = [env.frontend_url_one, env.frontend_url_two];
 app.use(
   cors({
     origin: (origin, callback) => {
+      console.log("Incoming origin: ", origin);
       if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
@@ -67,7 +68,6 @@ app.use(
     allowedHeaders: ["Content-Type", "Authorization"], // Add necessary headers
   })
 );
-
 
 // Handle cookies 🍪
 app.use(cookieParser());
