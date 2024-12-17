@@ -118,16 +118,9 @@ export default function Shop() {
   //   return axiosClient.post("/payments/remove_incomplete", { payment });
   // };
   const onIncompletePaymentFound = async (payment: PaymentDTO) => {
-    const callbacks = {
-      onReadyForServerApproval,
-      onReadyForServerCompletion,
-      onCancel,
-      onError,
-    };
     console.log("Incomplete payment detected:", payment);
     try {
-      const { status, transaction, identifier, amount, memo, metadata } =
-        payment;
+      const { status, identifier, amount, memo, metadata } = payment;
 
       if (
         status.developer_approved &&
@@ -142,7 +135,10 @@ export default function Shop() {
           amount,
           memo,
           metadata,
-          callbacks,
+          onReadyForServerApproval,
+          onReadyForServerCompletion,
+          onCancel,
+          onError,
         });
         console.log(`Marked payment ${payment.identifier} as completed.`);
       } else if (status.cancelled || status.user_cancelled) {
