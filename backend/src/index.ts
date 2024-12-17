@@ -89,6 +89,11 @@ app.use(
       dbName: env.mongo_db_name,
       collectionName: "user_sessions",
     }),
+    cookie: {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      maxAge: 1000 * 60 * 60 * 24,
+    },
   })
 );
 
