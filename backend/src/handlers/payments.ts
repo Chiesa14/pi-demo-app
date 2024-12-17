@@ -60,6 +60,7 @@ export default function mountPaymentsEndpoints(router: Router) {
       return res.status(401).json({
         error: "unauthorized",
         message: "User needs to sign in first",
+        session: req.session,
       });
     }
 
