@@ -113,45 +113,38 @@ export default function Shop() {
     console.log(payment);
   };
 
-  // const onIncompletePaymentFound = (payment: PaymentDTO) => {
-  //   console.log("onIncompletePaymentFound", payment);
-  //   return axiosClient.post("/payments/remove_incomplete", { payment });
-  // };
-  const onIncompletePaymentFound = async (payment: PaymentDTO) => {
-    console.log("Incomplete payment detected:", payment);
-    try {
-      const { status, identifier, amount, memo, metadata } = payment;
-
-      if (
-        status.developer_approved &&
-        status.transaction_verified &&
-        !status.developer_completed
-      ) {
-        console.log(
-          `Payment ${identifier} is approved and verified but not completed.`
-        );
-        await window.Pi.createPayment({
-          paymentId: identifier,
-          amount,
-          memo,
-          metadata,
-          onReadyForServerApproval,
-          onReadyForServerCompletion,
-          onCancel,
-          onError,
-        });
-        console.log(`Marked payment ${payment.identifier} as completed.`);
-      } else if (status.cancelled || status.user_cancelled) {
-        console.log(
-          `Payment ${identifier} was canceled. No further action required.`
-        );
-      } else {
-        console.error(`Payment ${identifier} is in an unknown state:`, status);
-      }
-    } catch (error) {
-      console.error("Error completing incomplete payment:", error);
-    }
+  const onIncompletePaymentFound = (payment: PaymentDTO) => {
+    console.log("onIncompletePaymentFound", payment);
+    return axiosClient.post("/payments/remove_incomplete", { payment });
   };
+  // const onIncompletePaymentFound = async (payment: PaymentDTO) => {
+  //   console.log("Incomplete payment detected:", payment);
+  //   try {
+  //       console.log(
+  //         `Payment ${identifier} is approved and verified but not completed.`
+  //       );
+  //       await window.Pi.createPayment({
+  //         paymentId: identifier,
+  //         amount,
+  //         memo,
+  //         metadata,
+  //         onReadyForServerApproval,
+  //         onReadyForServerCompletion,
+  //         onCancel,
+  //         onError,
+  //       });
+  //       console.log(`Marked payment ${payment.identifier} as completed.`);
+  //     } else if (status.cancelled || status.user_cancelled) {
+  //       console.log(
+  //         `Payment ${identifier} was canceled. No further action required.`
+  //       );
+  //     } else {
+  //       console.error(`Payment ${identifier} is in an unknown state:`, status);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error completing incomplete payment:", error);
+  //   }
+  // };
 
   const onReadyForServerApproval = (paymentId: string) => {
     console.log("onReadyForServerApproval", paymentId);
