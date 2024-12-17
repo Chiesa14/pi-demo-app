@@ -113,9 +113,22 @@ export default function Shop() {
     console.log(payment);
   };
 
-  const onIncompletePaymentFound = (payment: PaymentDTO) => {
-    console.log("onIncompletePaymentFound", payment);
-    return axiosClient.post("/payments/remove_incomplete", { payment });
+  // const onIncompletePaymentFound = (payment: PaymentDTO) => {
+  //   console.log("onIncompletePaymentFound", payment);
+  //   return axiosClient.post("/payments/remove_incomplete", { payment });
+  // };
+  const onIncompletePaymentFound = async (payment: PaymentDTO) => {
+    console.log("Incomplete payment detected:", payment);
+    try {
+      await window.Pi.createPayment({
+        paymentId: payment.identifier,
+        status: "COMPLETED", // Mark the payment as completed
+        memo: "Resetting incomplete payment",
+      });
+      console.log(`Marked payment ${payment.identifier} as completed.`);
+    } catch (error) {
+      console.error("Error completing incomplete payment:", error);
+    }
   };
 
   const onReadyForServerApproval = (paymentId: string) => {
